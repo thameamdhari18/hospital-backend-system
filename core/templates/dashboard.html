@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hospital Workflow System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 15px;
+        }
+        h1, h2 {
+            color: #1a1a2e;
+            margin: 0 0 15px 0;
+        }
+        h1 { font-size: 24px; }
+        h2 { font-size: 16px; color: #555; font-weight: 600; }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background: #4361ee;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #3a56d4; }
+        
+        /* Compact Cards Row */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+        .stat-card.warning { border-top: 3px solid #e74c3c; }
+        .stat-card.success { border-top: 3px solid #2ecc71; }
+        .stat-card.info { border-top: 3px solid #3498db; }
+        .stat-card.primary { border-top: 3px solid #9b59b6; }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        /* Two Column Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+        
+        @media (max-width: 1000px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        /* Wait Time Section */
+        .wait-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .wait-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .wait-value {
+            font-size: 22px;
+            font-weight: 600;
+            color: #4361ee;
+        }
+        .wait-value.red { color: #e74c3c; }
+        .wait-value.green { color: #2ecc71; }
+        .wait-label {
+            font-size: 11px;
+            color: #777;
+            margin-top: 2px;
+        }
+        
+        /* Department Cards - Compact */
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .dept-card {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+        }
+        .dept-card.overloaded { border-left-color: #e74c3c; }
+        .dept-name {
+            font-weight: 600;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .dept-wait {
+            font-size: 16px;
+            font-weight: 700;
+            color: #4361ee;
+        }
+        .dept-wait.warning { color: #e74c3c; }
+        .dept-meta {
+            font-size: 10px;
+            color: #888;
+        }
+        
+        /* Table - Compact */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 500;
+        }
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover { background: #f8f9fa; }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .badge-queue { background: #e8f6f3; color: #1abc9c; }
+        .badge-sla-ok { background: #e8f6f3; color: #1abc9c; }
+        .badge-sla-breach { background: #ffe6e6; color: #e74c3c; }
+        
+        .progress-mini {
+            width: 60px;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+        .progress-mini-fill {
+            height: 100%;
+            background: #3498db;
+            border-radius: 2px;
+        }
+        
+        .workflow {
+            display: flex;
+            gap: 3px;
+            font-size: 10px;
+        }
+        .step {
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: #ddd;
+            white-space: nowrap;
+        }
+        .step.active { background: #3498db; color: white; }
+        
+        select, button {
+            padding: 5px 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover { background: #2980b9; }
+        
+        /* Small Chart */
+        .chart-container {
+            height: 180px;
+            padding: 10px;
+        }
+        
+        .emergency-tag {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        /* Category Badges */
+        .badge-category { background: #e8f6f3; color: #1abc9c; }
+        .badge-inpatient { background: #e8f4f8; color: #3498db; }
+        .badge-emergency { background: #ffe6e6; color: #e74c3c; }
+        .badge-followup { background: #fef5e7; color: #f39c12; }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <h1>🏥 Hospital Workflow Dashboard</h1>
+    <a href="{% url 'create_request' %}" class="btn">+ New Request</a>
+</div>
+
+<!-- Quick Stats -->
+<div class="stats-row">
+    <div class="stat-card info">
+        <div class="stat-value">{{ requests|length }}</div>
+        <div class="stat-label">Total Requests</div>
+    </div>
+    <div class="stat-card info">
+        <div class="stat-value">{{ departments|length }}</div>
+        <div class="stat-label">Departments</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-value">{{ overloaded|length }}</div>
+        <div class="stat-label">Overloaded</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-value">{{ emergency_count }}</div>
+        <div class="stat-label">Emergency</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-value">{{ sla_breached_count }}</div>
+        <div class="stat-label">SLA Breached</div>
+    </div>
+    <div class="stat-card primary">
+        <div class="stat-value">{{ escalated_count }}</div>
+        <div class="stat-label">Escalated</div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Left Column - Requests -->
+    <div>
+        <div class="panel">
+            <h2>📋 Active Requests</h2>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Queue</th>
+                        <th>SLA</th>
+                        <th>Wait</th>
+                        <th>Progress</th>
+                        <th>Department</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for item in requests_with_progress %}
+                    {% with r=item.request progress=item.progress %}
+                    <tr {% if r.priority == 'Emergency' %}style="background:#fff5f5"{% endif %}>
+                        <td>
+                            {{ r.patient_name }}
+                            {% if r.priority == 'Emergency' %}<span class="emergency-tag">EMERG</span>{% endif %}
+                        </td>
+                        <td>{{ r.request_type }}</td>
+                        <td>
+                            {% if r.category == 'Inpatient' %}
+                            <span class="badge badge-inpatient">{{ r.category }}</span>
+                            {% elif r.category == 'Emergency' %}
+                            <span class="badge badge-emergency">{{ r.category }}</span>
+                            {% elif r.category == 'Follow-up' %}
+                            <span class="badge badge-followup">{{ r.category }}</span>
+                            {% else %}
+                            <span class="badge badge-category">{{ r.category }}</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="badge badge-queue">#{{ r.queue_position }}</span></td>
+                        <td>
+                            {% if r.is_sla_breached %}
+                            <span class="badge badge-sla-breach">BREACHED</span>
+                            {% else %}
+                            <span class="badge badge-sla-ok">OK</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ progress.time_in_current_stage }}m</td>
+                        <td>
+                            <span>{{ progress.progress_percent }}%</span>
+                        <div class="progress-mini-fill"
+     style="width: {{ progress.progress_percent|default:0 }}%;">
+</div>
+                        </td>
+                        <td>{{ r.assigned_department|default:"-" }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'update_status' r.id %}" style="display:flex;gap:3px;">
+                                {% csrf_token %}
+                                <select name="status">
+                                    <option value="Assigned" {% if r.status == 'Assigned' %}selected{% endif %}>Assigned</option>
+                                    <option value="In Progress" {% if r.status == 'In Progress' %}selected{% endif %}>Progress</option>
+                                    <option value="Completed" {% if r.status == 'Completed' %}selected{% endif %}>Done</option>
+                                    <option value="Closed" {% if r.status == 'Closed' %}selected{% endif %}>Close</option>
+                                </select>
+                                <button type="submit">→</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endwith %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column - Analytics -->
+    <div>
+        <!-- Wait Time Analytics -->
+        <div class="panel">
+            <h2>⏱️ Wait Times</h2>
+            <div class="wait-grid">
+                <div class="wait-item">
+                    <div class="wait-value">{{ wait_analytics.pending_requests }}</div>
+                    <div class="wait-label">Pending</div>
+                </div>
+                <div class="wait-item">
+                    <div class="wait-value">{{ wait_analytics.avg_wait_time_pending|default:"0" }}</div>
+                    <div class="wait-label">Avg Min</div>
+                </div>
+                <div class="wait-item">
+                    <div class="wait-value {% if wait_analytics.max_wait_time_pending > 60 %}red{% endif %}">{{ wait_analytics.max_wait_time_pending|default:"0" }}</div>
+                    <div class="wait-label">Max Min</div>
+                </div>
+                <div class="wait-item">
+                    <div class="wait-value green">{{ wait_analytics.completed_requests }}</div>
+                    <div class="wait-label">Completed</div>
+                </div>
+                <div class="wait-item">
+                    <div class="wait-value">{{ wait_analytics.emergency_pending }}</div>
+                    <div class="wait-label">Emergency</div>
+                </div>
+                <div class="wait-item">
+                    <div class="wait-value">{{ wait_analytics.avg_processing_time|default:"0" }}</div>
+                    <div class="wait-label">Avg Process</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Department Wait Times -->
+        <div class="panel">
+            <h2>🏢 Dept. Wait Times</h2>
+            <div class="dept-grid">
+                {% for dept_name, data in department_wait_times.items %}
+                <div class="dept-card {% if data.utilization > 100 %}overloaded{% endif %}">
+                    <div class="dept-name">{{ dept_name }}</div>
+                    <div class="dept-wait {% if data.avg_wait_minutes > 60 %}warning{% endif %}">{{ data.avg_wait_minutes }}m</div>
+                    <div class="dept-meta">{{ data.pending_count }} pending • {{ data.utilization }}% load</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Small Chart -->
+        <div class="panel">
+            <h2>📊 Department Load</h2>
+            <div class="chart-container">
+                <canvas id="deptChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ dept_names|json_script:"dept-names" }}
+{{ dept_loads|json_script:"dept-loads" }}
+
+<script>
+    const deptNames = JSON.parse(document.getElementById('dept-names').textContent);
+    const deptLoads = JSON.parse(document.getElementById('dept-loads').textContent);
+    const ctx = document.getElementById('deptChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: deptNames,
+            datasets: [{
+                label: 'Active Cases',
+                data: deptLoads,
+                backgroundColor: 'rgba(67, 97, 238, 0.7)',
+                borderColor: 'rgba(67, 97, 238, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { font: { size: 10 } } },
+                x: { ticks: { font: { size: 9 } } }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

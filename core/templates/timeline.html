@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request Timeline - Hospital Workflow</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        .request-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .request-info h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .info-item {
+            padding: 8px 0;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ddd;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 2px solid white;
+        }
+
+        .timeline-item.emergency::before {
+            background: #e74c3c;
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .timeline-status {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .timeline-dept {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .timeline-notes {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .escalated {
+            background: #ffe6e6;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .sla-breached {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="/" class="back-link">&larr; Back to Dashboard</a>
+    
+    <h1>Request Timeline</h1>
+    
+    <div class="request-info">
+        <h2>{{ request_obj.patient_name }}</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Request Type:</span> {{ request_obj.request_type }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Priority:</span> {{ request_obj.priority }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Status:</span> {{ request_obj.status }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Department:</span> {{ request_obj.assigned_department|default:"Not assigned" }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Created:</span> {{ request_obj.created_at }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">SLA Deadline:</span> 
+                {% if request_obj.sla_deadline %}
+                    {{ request_obj.sla_deadline }}
+                    {% if request_obj.is_sla_breached %}
+                        <span style="color: red;">(BREACHED)</span>
+                    {% endif %}
+                {% else %}
+                    Not set
+                {% endif %}
+            </div>
+            {% if request_obj.is_escalated %}
+            <div class="info-item" style="grid-column: span 2; color: red;">
+                <span class="info-label">ESCALATED:</span> {{ request_obj.escalation_reason }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h3>History</h3>
+    
+    <div class="timeline">
+        {% for entry in history %}
+        <div class="timeline-item 
+            {% if entry.status|lower|slice:":10" == "emergency" %}emergency{% endif %}
+            {% if request_obj.is_sla_breached and forloop.last %}sla-breached{% endif %}">
+            <div class="timeline-time">{{ entry.timestamp }}</div>
+            <div class="timeline-status">{{ entry.status }}</div>
+            {% if entry.department %}
+            <div class="timeline-dept">Department: {{ entry.department.name }}</div>
+            {% endif %}
+            {% if entry.notes %}
+            <div class="timeline-notes">{{ entry.notes }}</div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p>No history available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

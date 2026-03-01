@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Request</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #555;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+
+        optgroup {
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: #e8f6f3;
+            border-left: 4px solid #1abc9c;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .emergency-note {
+            background: #ffe6e6;
+            border-left: 4px solid #e74c3c;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🏥 Create New Patient Request</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Patient Name</label>
+        <input type="text" name="patient_name" required placeholder="Enter patient full name">
+
+        <label>Request Type</label>
+        <select name="request_type" required>
+            <optgroup label="Radiology">
+                <option>MRI</option>
+                <option>X-Ray</option>
+                <option>CT Scan</option>
+                <option>Ultrasound</option>
+            </optgroup>
+            <optgroup label="Pathology">
+                <option>Blood Test</option>
+            </optgroup>
+            <optgroup label="Cardiology">
+                <option>Cardiac</option>
+                <option>ECG</option>
+            </optgroup>
+            <optgroup label="Surgery">
+                <option>Surgery</option>
+            </optgroup>
+            <optgroup label="General Medicine">
+                <option>General Checkup</option>
+            </optgroup>
+            <optgroup label="Dental">
+                <option>Dental</option>
+            </optgroup>
+            <optgroup label="Ophthalmology">
+                <option>Eye</option>
+                <option>Optical</option>
+            </optgroup>
+            <optgroup label="Physiotherapy">
+                <option>Physiotherapy</option>
+            </optgroup>
+            <optgroup label="Pharmacy">
+                <option>Vaccination</option>
+            </optgroup>
+        </select>
+
+        <label>Category</label>
+        <select name="category" required>
+            <option value="Outpatient" selected>Outpatient</option>
+            <option value="Inpatient">Inpatient</option>
+            <option value="Emergency">Emergency</option>
+            <option value="Follow-up">Follow-up</option>
+        </select>
+
+        <label>Priority</label>
+        <select name="priority" required>
+            <option value="Normal" selected>Normal</option>
+            <option value="Emergency">Emergency</option>
+        </select>
+        
+        <div class="info-box">
+            <strong>ℹ️ Queue System:</strong> Requests are automatically queued based on priority and arrival time. 
+            Emergency cases are given priority in the queue.
+        </div>
+        
+        <div class="emergency-note" id="emergencyNote" style="display:none;">
+            <strong>⚠️ Emergency:</strong> Emergency requests will have a shorter SLA deadline (4 hours) and will be prioritized in the queue.
+        </div>
+
+        <button type="submit">Submit Request</button>
+    </form>
+
+    <a href="/" class="back-link">← Back to Dashboard</a>
+</div>
+
+<script>
+    const prioritySelect = document.querySelector('select[name="priority"]');
+    const emergencyNote = document.getElementById('emergencyNote');
+    
+    prioritySelect.addEventListener('change', function() {
+        if (this.value === 'Emergency') {
+            emergencyNote.style.display = 'block';
+        } else {
+            emergencyNote.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
