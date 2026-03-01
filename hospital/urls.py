@@ -16,9 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core import views
-path('timeline/<int:request_id>/', views.request_timeline, name='timeline'),
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),   # ADD THIS LINE
+    path('', include('core.urls')),
 ]
