@@ -1,9 +1,27 @@
-"""
+git """
 Management command to seed workflow definitions and category modifiers
 """
 from django.core.management.base import BaseCommand
 from core.models import WorkflowDefinition, CategoryWorkflowModifier
+from core.models import Department
 
+departments = [
+    "Reception",
+    "Radiology",
+    "Cardiology",
+    "ICU",
+    "Billing",
+    "Pathology",
+    "Emergency"
+]
+
+for dept in departments:
+    Department.objects.get_or_create(
+        name=dept,
+        defaults={"current_load": 0, "threshold": 10}
+    )
+
+print("Departments seeded successfully!")
 
 class Command(BaseCommand):
     help = 'Seed workflow definitions and category modifiers from default configuration'

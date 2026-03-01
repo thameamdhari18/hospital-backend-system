@@ -2,139 +2,228 @@
 <html>
 <head>
     <title>Create Request - Hospital Workflow</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            --card-bg: rgba(30, 41, 59, 0.9);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
         * {
             box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0;
-            padding: 40px 20px;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            max-width: 550px;
+            max-width: 600px;
             width: 100%;
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 48px;
+            border-radius: 32px;
+            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 40px;
         }
 
         .header-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 16px;
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 15px;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            font-size: 36px;
+            margin: 0 auto 24px;
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         h2 {
             text-align: center;
-            color: #1a1a2e;
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
             text-align: center;
-            color: #666;
-            margin-top: 8px;
-            font-size: 14px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         label {
             font-weight: 600;
             display: block;
-            margin-bottom: 8px;
-            color: #1a1a2e;
+            margin-bottom: 12px;
+            color: var(--text-primary);
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .required {
-            color: #e74c3c;
+            color: #f87171;
+            font-size: 16px;
         }
 
-        input, select {
+        input[type="text"] {
             width: 100%;
-            padding: 14px 16px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            border-radius: 10px;
-            border: 2px solid #e5e7eb;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
             box-sizing: border-box;
-            font-size: 15px;
-            font-family: 'Inter', Arial, sans-serif;
+            font-size: 16px;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
             transition: all 0.3s;
-            background: #f9fafb;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
         }
 
-        input:focus, select:focus {
+        input[type="text"]:focus {
             outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #818cf8;
+            background: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-secondary);
         }
 
         select {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
+            box-sizing: border-box;
+            font-size: 16px;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 12px center;
+            background-position: right 16px center;
             background-size: 20px;
-            padding-right: 40px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #818cf8;
+            background-color: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        select option {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 12px;
         }
 
         optgroup {
             font-weight: 600;
-            color: #667eea;
-        }
-
-        option {
-            padding: 12px;
-            font-weight: 500;
+            color: #818cf8;
         }
 
         .btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 18px;
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 32px;
             transition: all 0.3s;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.5);
         }
 
         .btn:active {
@@ -142,54 +231,58 @@
         }
 
         .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 24px;
             text-decoration: none;
-            color: #666;
-            font-weight: 500;
+            color: var(--text-secondary);
+            font-weight: 600;
             transition: color 0.2s;
+            gap: 8px;
         }
 
         .back-link:hover {
-            color: #667eea;
+            color: #818cf8;
         }
 
         .info-box {
-            background: linear-gradient(135deg, #e8f8f5 0%, #d1fae5 100%);
+            background: rgba(16, 185, 129, 0.15);
             border-left: 4px solid #10b981;
-            padding: 14px 18px;
-            margin: 20px 0;
-            border-radius: 10px;
-            font-size: 13px;
-            color: #065f46;
+            padding: 18px 22px;
+            margin: 28px 0;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #6ee7b7;
         }
-        
+
         .info-box strong {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 5px;
+            gap: 10px;
+            margin-bottom: 6px;
+            color: #a7f3d0;
         }
-        
+
         .emergency-note {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            background: rgba(239, 68, 68, 0.15);
             border-left: 4px solid #ef4444;
-            padding: 14px 18px;
+            padding: 18px 22px;
             margin: 20px 0;
-            border-radius: 10px;
-            font-size: 13px;
-            color: #991b1b;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #fca5a5;
             animation: fadeIn 0.3s ease;
         }
-        
+
         .emergency-note strong {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 5px;
+            gap: 10px;
+            margin-bottom: 6px;
+            color: #fecaca;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -198,7 +291,7 @@
         .category-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 12px;
             margin-top: 5px;
         }
 
@@ -218,41 +311,41 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 16px 12px;
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
+            padding: 20px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.3s;
             margin: 0;
         }
 
         .category-card label:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
+            border-color: #818cf8;
+            background: rgba(99, 102, 241, 0.1);
         }
 
         .category-card input[type="radio"]:checked + label {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            border-color: #818cf8;
+            background: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
 
         .category-icon {
-            font-size: 24px;
-            margin-bottom: 6px;
+            font-size: 28px;
+            margin-bottom: 8px;
         }
 
         .category-text {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            color: #1a1a2e;
+            color: var(--text-primary);
         }
 
         .priority-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 12px;
             margin-top: 5px;
         }
 
@@ -272,41 +365,58 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 14px 12px;
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
+            padding: 18px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.3s;
             margin: 0;
         }
 
         .priority-card label:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
+            border-color: #818cf8;
+            background: rgba(99, 102, 241, 0.1);
         }
 
         .priority-card input[type="radio"]:checked + label {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            border-color: #818cf8;
+            background: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
 
         .priority-card input[type="radio"]:checked + label.emergency-label {
             border-color: #ef4444;
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
         }
 
         .priority-icon {
-            font-size: 20px;
-            margin-bottom: 4px;
+            font-size: 24px;
+            margin-bottom: 6px;
         }
 
         .priority-text {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            color: #1a1a2e;
+            color: var(--text-primary);
+        }
+
+        /* Form row for better layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 32px 24px;
+            }
         }
     </style>
 </head>
@@ -316,22 +426,22 @@
     <div class="header">
         <div class="header-icon">🏥</div>
         <h2>New Patient Request</h2>
-        <p class="subtitle">Fill in the details to create a new workflow request</p>
+        <p class="subtitle">Fill in the details to create a workflow request</p>
     </div>
 
     <form method="POST">
         {% csrf_token %}
 
         <div class="form-group">
-            <label>Patient Name <span class="required">*</span></label>
+            <label><i class="fas fa-user"></i> Patient Name <span class="required">*</span></label>
             <input type="text" name="patient_name" required placeholder="Enter patient full name">
         </div>
 
         <div class="form-group">
-            <label>Request Type <span class="required">*</span></label>
+            <label><i class="fas fa-stethoscope"></i> Request Type <span class="required">*</span></label>
             <select name="request_type" required>
                 <optgroup label="🔬 Radiology">
-                    <option value="MRI">MRI</option>
+                    <option value="MRI">MRI Scan</option>
                     <option value="X-Ray">X-Ray</option>
                     <option value="CT Scan">CT Scan</option>
                     <option value="Ultrasound">Ultrasound</option>
@@ -340,8 +450,8 @@
                     <option value="Blood Test">Blood Test</option>
                 </optgroup>
                 <optgroup label="❤️ Cardiology">
-                    <option value="Cardiac">Cardiac</option>
-                    <option value="ECG">ECG</option>
+                    <option value="Cardiac">Cardiac Care</option>
+                    <option value="ECG">ECG / EKG</option>
                 </optgroup>
                 <optgroup label="🏥 Surgery">
                     <option value="Surgery">Surgery</option>
@@ -350,10 +460,10 @@
                     <option value="General Checkup">General Checkup</option>
                 </optgroup>
                 <optgroup label="🦷 Dental">
-                    <option value="Dental">Dental</option>
+                    <option value="Dental">Dental Care</option>
                 </optgroup>
                 <optgroup label="👁️ Ophthalmology">
-                    <option value="Eye">Eye</option>
+                    <option value="Eye">Eye Care</option>
                     <option value="Optical">Optical</option>
                 </optgroup>
                 <optgroup label="💪 Physiotherapy">
@@ -365,83 +475,89 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <label>Category <span class="required">*</span></label>
-            <div class="category-options">
-                <div class="category-card">
-                    <input type="radio" name="category" id="cat1" value="Outpatient" checked>
-                    <label for="cat1">
-                        <span class="category-icon">🏃</span>
-                        <span class="category-text">Outpatient</span>
-                    </label>
-                </div>
-                <div class="category-card">
-                    <input type="radio" name="category" id="cat2" value="Inpatient">
-                    <label for="cat2">
-                        <span class="category-icon">🛏️</span>
-                        <span class="category-text">Inpatient</span>
-                    </label>
-                </div>
-                <div class="category-card">
-                    <input type="radio" name="category" id="cat3" value="Emergency">
-                    <label for="cat3">
-                        <span class="category-icon">🚨</span>
-                        <span class="category-text">Emergency</span>
-                    </label>
-                </div>
-                <div class="category-card">
-                    <input type="radio" name="category" id="cat4" value="Follow-up">
-                    <label for="cat4">
-                        <span class="category-icon">🔄</span>
-                        <span class="category-text">Follow-up</span>
-                    </label>
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-tags"></i> Category <span class="required">*</span></label>
+                <div class="category-options">
+                    <div class="category-card">
+                        <input type="radio" name="category" id="cat1" value="Outpatient" checked>
+                        <label for="cat1">
+                            <span class="category-icon">🏃</span>
+                            <span class="category-text">Outpatient</span>
+                        </label>
+                    </div>
+                    <div class="category-card">
+                        <input type="radio" name="category" id="cat2" value="Inpatient">
+                        <label for="cat2">
+                            <span class="category-icon">🛏️</span>
+                            <span class="category-text">Inpatient</span>
+                        </label>
+                    </div>
+                    <div class="category-card">
+                        <input type="radio" name="category" id="cat3" value="Emergency">
+                        <label for="cat3">
+                            <span class="category-icon">🚨</span>
+                            <span class="category-text">Emergency</span>
+                        </label>
+                    </div>
+                    <div class="category-card">
+                        <input type="radio" name="category" id="cat4" value="Follow-up">
+                        <label for="cat4">
+                            <span class="category-icon">🔄</span>
+                            <span class="category-text">Follow-up</span>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>Priority <span class="required">*</span></label>
-            <div class="priority-options">
-                <div class="priority-card">
-                    <input type="radio" name="priority" id="pri1" value="Normal" checked>
-                    <label for="pri1">
-                        <span class="priority-icon">✅</span>
-                        <span class="priority-text">Normal</span>
-                    </label>
-                </div>
-                <div class="priority-card">
-                    <input type="radio" name="priority" id="pri2" value="Emergency">
-                    <label for="pri2" class="emergency-label">
-                        <span class="priority-icon">⚡</span>
-                        <span class="priority-text">Emergency</span>
-                    </label>
+            <div class="form-group">
+                <label><i class="fas fa-flag"></i> Priority <span class="required">*</span></label>
+                <div class="priority-options">
+                    <div class="priority-card">
+                        <input type="radio" name="priority" id="pri1" value="Normal" checked>
+                        <label for="pri1">
+                            <span class="priority-icon">✅</span>
+                            <span class="priority-text">Normal</span>
+                        </label>
+                    </div>
+                    <div class="priority-card">
+                        <input type="radio" name="priority" id="pri2" value="Emergency">
+                        <label for="pri2" class="emergency-label">
+                            <span class="priority-icon">⚡</span>
+                            <span class="priority-text">Emergency</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
         
         <div class="info-box">
-            <strong>ℹ️ Queue System</strong>
+            <strong><i class="fas fa-info-circle"></i> Queue System</strong>
             Requests are automatically queued based on priority and arrival time. 
-            Emergency cases are given priority in the queue.
+            Emergency cases are given priority in the queue with shorter SLA deadlines.
         </div>
         
         <div class="emergency-note" id="emergencyNote" style="display:none;">
-            <strong>⚠️ Emergency Priority</strong>
-            Emergency requests will have a shorter SLA deadline (4 hours) and will be prioritized in the queue.
+            <strong><i class="fas fa-exclamation-triangle"></i> Emergency Priority</strong>
+            Emergency requests will have a shorter SLA deadline (4 hours) and will be prioritized in the queue over all other requests.
         </div>
 
-        <button type="submit">Submit Request</button>
+        <button type="submit">
+            <i class="fas fa-paper-plane"></i>
+            Submit Request
+        </button>
     </form>
 
-    <a href="/" class="back-link">← Back to Dashboard</a>
+    <a href="/" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+    </a>
 </div>
 
 <script>
-    const prioritySelect = document.querySelector('select[name="priority"]');
     const radioPriority = document.querySelectorAll('input[name="priority"]');
     const emergencyNote = document.getElementById('emergencyNote');
     
-    // Also listen to radio buttons
     radioPriority.forEach(radio => {
         radio.addEventListener('change', function() {
             if (this.value === 'Emergency') {
@@ -451,17 +567,6 @@
             }
         });
     });
-    
-    // Keep backward compatibility with select
-    if (prioritySelect) {
-        prioritySelect.addEventListener('change', function() {
-            const radio = document.querySelector(`input[name="priority"][value="${this.value}"]`);
-            if (radio) {
-                radio.checked = true;
-                radio.dispatchEvent(new Event('change'));
-            }
-        });
-    }
 </script>
 
 </body>
