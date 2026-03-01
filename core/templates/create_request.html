@@ -1,163 +1,433 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Create Request</title>
-
+    <title>Create Request - Hospital Workflow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
-            max-width: 600px;
-            margin: auto;
+            max-width: 550px;
+            width: 100%;
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 15px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
         h2 {
             text-align: center;
-            color: #2c3e50;
+            color: #1a1a2e;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
         }
 
         label {
-            font-weight: bold;
+            font-weight: 600;
             display: block;
-            margin-top: 15px;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e74c3c;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 14px 16px;
             margin-top: 5px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
             box-sizing: border-box;
+            font-size: 15px;
+            font-family: 'Inter', Arial, sans-serif;
+            transition: all 0.3s;
+            background: #f9fafb;
         }
 
-        button {
-            width: 100%;
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        optgroup {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        option {
             padding: 12px;
-            background: #3498db;
+            font-weight: 500;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 12px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        button:hover {
-            background: #2980b9;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .back-link {
             display: block;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
             text-decoration: none;
-            color: #555;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .back-link:hover {
-            color: #000;
+            color: #667eea;
         }
 
-        optgroup {
-            font-weight: bold;
+        .info-box {
+            background: linear-gradient(135deg, #e8f8f5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+            padding: 14px 18px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #065f46;
         }
         
-        .info-box {
-            background: #e8f6f3;
-            border-left: 4px solid #1abc9c;
-            padding: 10px 15px;
-            margin: 15px 0;
-            border-radius: 4px;
+        .info-box strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
         }
         
         .emergency-note {
-            background: #ffe6e6;
-            border-left: 4px solid #e74c3c;
-            padding: 10px 15px;
-            margin: 15px 0;
-            border-radius: 4px;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 14px 18px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #991b1b;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .emergency-note strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .category-card {
+            position: relative;
+        }
+
+        .category-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .category-card label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 12px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0;
+        }
+
+        .category-card label:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .category-card input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .category-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .category-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .priority-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .priority-card {
+            position: relative;
+        }
+
+        .priority-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .priority-card label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 12px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0;
+        }
+
+        .priority-card label:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .priority-card input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .priority-card input[type="radio"]:checked + label.emergency-label {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .priority-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .priority-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a2e;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🏥 Create New Patient Request</h2>
+    <div class="header">
+        <div class="header-icon">🏥</div>
+        <h2>New Patient Request</h2>
+        <p class="subtitle">Fill in the details to create a new workflow request</p>
+    </div>
 
     <form method="POST">
         {% csrf_token %}
 
-        <label>Patient Name</label>
-        <input type="text" name="patient_name" required placeholder="Enter patient full name">
+        <div class="form-group">
+            <label>Patient Name <span class="required">*</span></label>
+            <input type="text" name="patient_name" required placeholder="Enter patient full name">
+        </div>
 
-        <label>Request Type</label>
-        <select name="request_type" required>
-            <optgroup label="Radiology">
-                <option>MRI</option>
-                <option>X-Ray</option>
-                <option>CT Scan</option>
-                <option>Ultrasound</option>
-            </optgroup>
-            <optgroup label="Pathology">
-                <option>Blood Test</option>
-            </optgroup>
-            <optgroup label="Cardiology">
-                <option>Cardiac</option>
-                <option>ECG</option>
-            </optgroup>
-            <optgroup label="Surgery">
-                <option>Surgery</option>
-            </optgroup>
-            <optgroup label="General Medicine">
-                <option>General Checkup</option>
-            </optgroup>
-            <optgroup label="Dental">
-                <option>Dental</option>
-            </optgroup>
-            <optgroup label="Ophthalmology">
-                <option>Eye</option>
-                <option>Optical</option>
-            </optgroup>
-            <optgroup label="Physiotherapy">
-                <option>Physiotherapy</option>
-            </optgroup>
-            <optgroup label="Pharmacy">
-                <option>Vaccination</option>
-            </optgroup>
-        </select>
+        <div class="form-group">
+            <label>Request Type <span class="required">*</span></label>
+            <select name="request_type" required>
+                <optgroup label="🔬 Radiology">
+                    <option value="MRI">MRI</option>
+                    <option value="X-Ray">X-Ray</option>
+                    <option value="CT Scan">CT Scan</option>
+                    <option value="Ultrasound">Ultrasound</option>
+                </optgroup>
+                <optgroup label="🧪 Pathology">
+                    <option value="Blood Test">Blood Test</option>
+                </optgroup>
+                <optgroup label="❤️ Cardiology">
+                    <option value="Cardiac">Cardiac</option>
+                    <option value="ECG">ECG</option>
+                </optgroup>
+                <optgroup label="🏥 Surgery">
+                    <option value="Surgery">Surgery</option>
+                </optgroup>
+                <optgroup label="🩺 General Medicine">
+                    <option value="General Checkup">General Checkup</option>
+                </optgroup>
+                <optgroup label="🦷 Dental">
+                    <option value="Dental">Dental</option>
+                </optgroup>
+                <optgroup label="👁️ Ophthalmology">
+                    <option value="Eye">Eye</option>
+                    <option value="Optical">Optical</option>
+                </optgroup>
+                <optgroup label="💪 Physiotherapy">
+                    <option value="Physiotherapy">Physiotherapy</option>
+                </optgroup>
+                <optgroup label="💊 Pharmacy">
+                    <option value="Vaccination">Vaccination</option>
+                </optgroup>
+            </select>
+        </div>
 
-        <label>Category</label>
-        <select name="category" required>
-            <option value="Outpatient" selected>Outpatient</option>
-            <option value="Inpatient">Inpatient</option>
-            <option value="Emergency">Emergency</option>
-            <option value="Follow-up">Follow-up</option>
-        </select>
+        <div class="form-group">
+            <label>Category <span class="required">*</span></label>
+            <div class="category-options">
+                <div class="category-card">
+                    <input type="radio" name="category" id="cat1" value="Outpatient" checked>
+                    <label for="cat1">
+                        <span class="category-icon">🏃</span>
+                        <span class="category-text">Outpatient</span>
+                    </label>
+                </div>
+                <div class="category-card">
+                    <input type="radio" name="category" id="cat2" value="Inpatient">
+                    <label for="cat2">
+                        <span class="category-icon">🛏️</span>
+                        <span class="category-text">Inpatient</span>
+                    </label>
+                </div>
+                <div class="category-card">
+                    <input type="radio" name="category" id="cat3" value="Emergency">
+                    <label for="cat3">
+                        <span class="category-icon">🚨</span>
+                        <span class="category-text">Emergency</span>
+                    </label>
+                </div>
+                <div class="category-card">
+                    <input type="radio" name="category" id="cat4" value="Follow-up">
+                    <label for="cat4">
+                        <span class="category-icon">🔄</span>
+                        <span class="category-text">Follow-up</span>
+                    </label>
+                </div>
+            </div>
+        </div>
 
-        <label>Priority</label>
-        <select name="priority" required>
-            <option value="Normal" selected>Normal</option>
-            <option value="Emergency">Emergency</option>
-        </select>
+        <div class="form-group">
+            <label>Priority <span class="required">*</span></label>
+            <div class="priority-options">
+                <div class="priority-card">
+                    <input type="radio" name="priority" id="pri1" value="Normal" checked>
+                    <label for="pri1">
+                        <span class="priority-icon">✅</span>
+                        <span class="priority-text">Normal</span>
+                    </label>
+                </div>
+                <div class="priority-card">
+                    <input type="radio" name="priority" id="pri2" value="Emergency">
+                    <label for="pri2" class="emergency-label">
+                        <span class="priority-icon">⚡</span>
+                        <span class="priority-text">Emergency</span>
+                    </label>
+                </div>
+            </div>
+        </div>
         
         <div class="info-box">
-            <strong>ℹ️ Queue System:</strong> Requests are automatically queued based on priority and arrival time. 
+            <strong>ℹ️ Queue System</strong>
+            Requests are automatically queued based on priority and arrival time. 
             Emergency cases are given priority in the queue.
         </div>
         
         <div class="emergency-note" id="emergencyNote" style="display:none;">
-            <strong>⚠️ Emergency:</strong> Emergency requests will have a shorter SLA deadline (4 hours) and will be prioritized in the queue.
+            <strong>⚠️ Emergency Priority</strong>
+            Emergency requests will have a shorter SLA deadline (4 hours) and will be prioritized in the queue.
         </div>
 
         <button type="submit">Submit Request</button>
@@ -168,15 +438,30 @@
 
 <script>
     const prioritySelect = document.querySelector('select[name="priority"]');
+    const radioPriority = document.querySelectorAll('input[name="priority"]');
     const emergencyNote = document.getElementById('emergencyNote');
     
-    prioritySelect.addEventListener('change', function() {
-        if (this.value === 'Emergency') {
-            emergencyNote.style.display = 'block';
-        } else {
-            emergencyNote.style.display = 'none';
-        }
+    // Also listen to radio buttons
+    radioPriority.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'Emergency') {
+                emergencyNote.style.display = 'block';
+            } else {
+                emergencyNote.style.display = 'none';
+            }
+        });
     });
+    
+    // Keep backward compatibility with select
+    if (prioritySelect) {
+        prioritySelect.addEventListener('change', function() {
+            const radio = document.querySelector(`input[name="priority"][value="${this.value}"]`);
+            if (radio) {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change'));
+            }
+        });
+    }
 </script>
 
 </body>

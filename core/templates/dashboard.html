@@ -3,405 +3,622 @@
 <head>
     <title>Hospital Workflow System</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f0f2f5;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0;
-            padding: 15px;
+            padding: 20px;
+            min-height: 100vh;
         }
         h1, h2 {
             color: #1a1a2e;
             margin: 0 0 15px 0;
         }
-        h1 { font-size: 24px; }
+        h1 { font-size: 28px; font-weight: 700; }
         h2 { font-size: 16px; color: #555; font-weight: 600; }
+        
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
         
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
         .btn {
-            padding: 10px 20px;
-            background: #4361ee;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background 0.2s;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        .btn:hover { background: #3a56d4; }
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
         
-        /* Compact Cards Row */
+        /* Stats Cards with Gradient Borders */
         .stats-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
         }
         .stat-card {
             background: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            flex: 1;
-            min-width: 120px;
-            text-align: center;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
         }
-        .stat-card.warning { border-top: 3px solid #e74c3c; }
-        .stat-card.success { border-top: 3px solid #2ecc71; }
-        .stat-card.info { border-top: 3px solid #3498db; }
-        .stat-card.primary { border-top: 3px solid #9b59b6; }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        .stat-card.warning::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .stat-card.success::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .stat-card.info::before { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        .stat-card.primary::before { background: linear-gradient(90deg, #fa709a, #fee140); }
+        
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .stat-card:nth-child(1) .stat-icon { background: #e8f4ff; }
+        .stat-card:nth-child(2) .stat-icon { background: #fff3e8; }
+        .stat-card:nth-child(3) .stat-icon { background: #ffe8e8; }
+        .stat-card:nth-child(4) .stat-icon { background: #fff8e8; }
+        .stat-card:nth-child(5) .stat-icon { background: #fce8ff; }
+        .stat-card:nth-child(6) .stat-icon { background: #e8fff4; }
         
         .stat-value {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            color: #2c3e50;
+            color: #1a1a2e;
+            margin-bottom: 4px;
         }
         .stat-label {
-            font-size: 12px;
-            color: #888;
-            margin-top: 4px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
         }
         
         /* Two Column Layout */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 20px;
+            grid-template-columns: 1fr 380px;
+            gap: 25px;
         }
         
-        @media (max-width: 1000px) {
+        @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: 1fr; }
         }
         
         .panel {
             background: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         /* Wait Time Section */
         .wait-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 15px;
         }
         .wait-item {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
+            transition: transform 0.3s;
+        }
+        .wait-item:hover {
+            transform: scale(1.05);
         }
         .wait-value {
-            font-size: 22px;
-            font-weight: 600;
-            color: #4361ee;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .wait-value.red { color: #e74c3c; }
-        .wait-value.green { color: #2ecc71; }
+        .wait-value.red { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+        }
+        .wait-value.green { 
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            -webkit-background-clip: text;
+        }
         .wait-label {
-            font-size: 11px;
-            color: #777;
-            margin-top: 2px;
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+            font-weight: 500;
         }
         
-        /* Department Cards - Compact */
+        /* Department Cards */
         .dept-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 8px;
-            max-height: 200px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            max-height: 280px;
             overflow-y: auto;
+            padding-right: 5px;
         }
         .dept-card {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 3px solid #3498db;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
         }
-        .dept-card.overloaded { border-left-color: #e74c3c; }
+        .dept-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .dept-card.overloaded { border-left-color: #f5576c; }
         .dept-name {
             font-weight: 600;
-            font-size: 12px;
-            color: #333;
-            margin-bottom: 4px;
+            font-size: 13px;
+            color: #1a1a2e;
+            margin-bottom: 8px;
         }
         .dept-wait {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 700;
-            color: #4361ee;
+            color: #667eea;
+            margin-bottom: 4px;
         }
-        .dept-wait.warning { color: #e74c3c; }
+        .dept-wait.warning { color: #f5576c; }
         .dept-meta {
-            font-size: 10px;
-            color: #888;
+            font-size: 11px;
+            color: #666;
         }
         
-        /* Table - Compact */
+        /* Table Styling */
         .table-container {
             overflow-x: auto;
         }
         table {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
         }
         th {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 10px 8px;
+            padding: 14px 12px;
             text-align: left;
-            font-weight: 500;
-        }
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-        }
-        tr:hover { background: #f8f9fa; }
-        
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        .badge-queue { background: #e8f6f3; color: #1abc9c; }
-        .badge-sla-ok { background: #e8f6f3; color: #1abc9c; }
-        .badge-sla-breach { background: #ffe6e6; color: #e74c3c; }
-        
-        .progress-mini {
-            width: 60px;
-            height: 4px;
-            background: #eee;
-            border-radius: 2px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 5px;
-        }
-        .progress-mini-fill {
-            height: 100%;
-            background: #3498db;
-            border-radius: 2px;
-        }
-        
-        .workflow {
-            display: flex;
-            gap: 3px;
-            font-size: 10px;
-        }
-        .step {
-            padding: 2px 6px;
-            border-radius: 10px;
-            background: #ddd;
+            font-weight: 600;
             white-space: nowrap;
         }
-        .step.active { background: #3498db; color: white; }
+        th:first-child { border-radius: 10px 0 0 0; }
+        th:last-child { border-radius: 0 10px 0 0; }
         
-        select, button {
-            padding: 5px 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 12px;
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
         }
-        button {
-            background: #3498db;
+        tr { transition: background 0.2s; }
+        tr:hover { 
+            background: linear-gradient(90deg, #f8f9ff 0%, #fff8f0 100%);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-queue { 
+            background: linear-gradient(135deg, #e8f8f0 0%, #d4f1e4 100%);
+            color: #10b981;
+        }
+        .badge-sla-ok { 
+            background: linear-gradient(135deg, #e8f8ff 0%, #d0f0ff 100%);
+            color: #0ea5e9;
+        }
+        .badge-sla-breach { 
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffd4d4 100%);
+            color: #ef4444;
+        }
+        
+        /* Progress Bar */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .progress-bar {
+            width: 100px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Action Buttons */
+        .status-form {
+            display: flex;
+            gap: 6px;
+        }
+        .status-select {
+            padding: 6px 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .status-select:hover {
+            border-color: #667eea;
+        }
+        .action-btn {
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        button:hover { background: #2980b9; }
-        
-        /* Small Chart */
-        .chart-container {
-            height: 180px;
-            padding: 10px;
+        .action-btn:hover {
+            transform: scale(1.05);
         }
         
+        /* Emergency Tag */
         .emergency-tag {
-            background: #e74c3c;
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
             color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
             font-size: 10px;
-            margin-left: 5px;
+            font-weight: 700;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         /* Category Badges */
-        .badge-category { background: #e8f6f3; color: #1abc9c; }
-        .badge-inpatient { background: #e8f4f8; color: #3498db; }
-        .badge-emergency { background: #ffe6e6; color: #e74c3c; }
-        .badge-followup { background: #fef5e7; color: #f39c12; }
+        .badge-category { 
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #059669;
+        }
+        .badge-inpatient { 
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #2563eb;
+        }
+        .badge-emergency { 
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+        }
+        .badge-followup { 
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #d97706;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+        
+        /* Chart */
+        .chart-container {
+            height: 220px;
+            padding: 10px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <h1>🏥 Hospital Workflow Dashboard</h1>
-    <a href="{% url 'create_request' %}" class="btn">+ New Request</a>
-</div>
+<div class="dashboard-container">
+    <div class="top-bar">
+        <div class="logo-section">
+            <div class="logo-icon">🏥</div>
+            <div class="logo-text">Hospital Workflow System</div>
+        </div>
+        <a href="{% url 'create_request' %}" class="btn">+ New Request</a>
+    </div>
 
-<!-- Quick Stats -->
-<div class="stats-row">
-    <div class="stat-card info">
-        <div class="stat-value">{{ requests|length }}</div>
-        <div class="stat-label">Total Requests</div>
+    <!-- Quick Stats -->
+    <div class="stats-row">
+        <div class="stat-card info">
+            <div class="stat-icon">📋</div>
+            <div class="stat-value">{{ requests|length }}</div>
+            <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card info">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-value">{{ departments|length }}</div>
+            <div class="stat-label">Departments</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-value">{{ overloaded|length }}</div>
+            <div class="stat-label">Overloaded</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-icon">🚨</div>
+            <div class="stat-value">{{ emergency_count }}</div>
+            <div class="stat-label">Emergency</div>
+        </div>
+        <div class="stat-card primary">
+            <div class="stat-icon">⏰</div>
+            <div class="stat-value">{{ sla_breached_count }}</div>
+            <div class="stat-label">SLA Breached</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value">{{ escalated_count }}</div>
+            <div class="stat-label">Escalated</div>
+        </div>
     </div>
-    <div class="stat-card info">
-        <div class="stat-value">{{ departments|length }}</div>
-        <div class="stat-label">Departments</div>
-    </div>
-    <div class="stat-card warning">
-        <div class="stat-value">{{ overloaded|length }}</div>
-        <div class="stat-label">Overloaded</div>
-    </div>
-    <div class="stat-card warning">
-        <div class="stat-value">{{ emergency_count }}</div>
-        <div class="stat-label">Emergency</div>
-    </div>
-    <div class="stat-card warning">
-        <div class="stat-value">{{ sla_breached_count }}</div>
-        <div class="stat-label">SLA Breached</div>
-    </div>
-    <div class="stat-card primary">
-        <div class="stat-value">{{ escalated_count }}</div>
-        <div class="stat-label">Escalated</div>
-    </div>
-</div>
 
-<div class="dashboard-grid">
-    <!-- Left Column - Requests -->
-    <div>
-        <div class="panel">
-            <h2>📋 Active Requests</h2>
-            <div class="table-container">
-                <table>
-                    <tr>
-                        <th>Patient</th>
-                        <th>Type</th>
-                        <th>Category</th>
-                        <th>Queue</th>
-                        <th>SLA</th>
-                        <th>Wait</th>
-                        <th>Progress</th>
-                        <th>Department</th>
-                        <th>Action</th>
-                    </tr>
-                    {% for item in requests_with_progress %}
-                    {% with r=item.request progress=item.progress %}
-                    <tr {% if r.priority == 'Emergency' %}style="background:#fff5f5"{% endif %}>
-                        <td>
-                            {{ r.patient_name }}
-                            {% if r.priority == 'Emergency' %}<span class="emergency-tag">EMERG</span>{% endif %}
-                        </td>
-                        <td>{{ r.request_type }}</td>
-                        <td>
-                            {% if r.category == 'Inpatient' %}
-                            <span class="badge badge-inpatient">{{ r.category }}</span>
-                            {% elif r.category == 'Emergency' %}
-                            <span class="badge badge-emergency">{{ r.category }}</span>
-                            {% elif r.category == 'Follow-up' %}
-                            <span class="badge badge-followup">{{ r.category }}</span>
-                            {% else %}
-                            <span class="badge badge-category">{{ r.category }}</span>
-                            {% endif %}
-                        </td>
-                        <td><span class="badge badge-queue">#{{ r.queue_position }}</span></td>
-                        <td>
-                            {% if r.is_sla_breached %}
-                            <span class="badge badge-sla-breach">BREACHED</span>
-                            {% else %}
-                            <span class="badge badge-sla-ok">OK</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ progress.time_in_current_stage }}m</td>
-                        <td>
-                            <span>{{ progress.progress_percent }}%</span>
-                        <div class="progress-mini-fill"
-     style="width: {{ progress.progress_percent|default:0 }}%;">
-</div>
-                        </td>
-                        <td>{{ r.assigned_department|default:"-" }}</td>
-                        <td>
-                            <form method="POST" action="{% url 'update_status' r.id %}" style="display:flex;gap:3px;">
-                                {% csrf_token %}
-                                <select name="status">
-                                    <option value="Assigned" {% if r.status == 'Assigned' %}selected{% endif %}>Assigned</option>
-                                    <option value="In Progress" {% if r.status == 'In Progress' %}selected{% endif %}>Progress</option>
-                                    <option value="Completed" {% if r.status == 'Completed' %}selected{% endif %}>Done</option>
-                                    <option value="Closed" {% if r.status == 'Closed' %}selected{% endif %}>Close</option>
-                                </select>
-                                <button type="submit">→</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endwith %}
+    <div class="dashboard-grid">
+        <!-- Left Column - Requests -->
+        <div>
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">📋 Active Requests</div>
+                    <span style="color: #666; font-size: 14px;">{{ requests|length }} active</span>
+                </div>
+                <div class="table-container">
+                    {% if requests %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Queue</th>
+                                <th>SLA</th>
+                                <th>Wait</th>
+                                <th>Progress</th>
+                                <th>Department</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in requests_with_progress %}
+                            {% with r=item.request progress=item.progress %}
+                            <tr {% if r.priority == 'Emergency' %}style="background:linear-gradient(90deg, #fff5f5 0%, #fff8f0 100%)"{% endif %}>
+                                <td>
+                                    <strong>{{ r.patient_name }}</strong>
+                                    {% if r.priority == 'Emergency' %}<span class="emergency-tag">EMERG</span>{% endif %}
+                                </td>
+                                <td><strong>{{ r.request_type }}</strong></td>
+                                <td>
+                                    {% if r.category == 'Inpatient' %}
+                                    <span class="badge badge-inpatient">{{ r.category }}</span>
+                                    {% elif r.category == 'Emergency' %}
+                                    <span class="badge badge-emergency">{{ r.category }}</span>
+                                    {% elif r.category == 'Follow-up' %}
+                                    <span class="badge badge-followup">{{ r.category }}</span>
+                                    {% else %}
+                                    <span class="badge badge-category">{{ r.category }}</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="badge badge-queue">#{{ r.queue_position }}</span></td>
+                                <td>
+                                    {% if r.is_sla_breached %}
+                                    <span class="badge badge-sla-breach">BREACHED</span>
+                                    {% else %}
+                                    <span class="badge badge-sla-ok">OK</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ progress.time_in_current_stage }}m</strong></td>
+                                <td>
+                                    <div class="progress-wrapper">
+                                        <span>{{ progress.progress_percent }}%</span>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: {{ progress.progress_percent|default:0 }}%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><strong>{{ r.assigned_department|default:"-" }}</strong></td>
+                                <td>
+                                    <form method="POST" action="{% url 'update_status' r.id %}" class="status-form">
+                                        {% csrf_token %}
+                                        <select name="status" class="status-select">
+                                            <option value="Assigned" {% if r.status == 'Assigned' %}selected{% endif %}>Assigned</option>
+                                            <option value="In Progress" {% if r.status == 'In Progress' %}selected{% endif %}>Progress</option>
+                                            <option value="Completed" {% if r.status == 'Completed' %}selected{% endif %}>Done</option>
+                                            <option value="Closed" {% if r.status == 'Closed' %}selected{% endif %}>Close</option>
+                                        </select>
+                                        <button type="submit" class="action-btn">→</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p>No active requests</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column - Analytics -->
+        <div>
+            <!-- Wait Time Analytics -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">⏱️ Wait Times</div>
+                </div>
+                <div class="wait-grid">
+                    <div class="wait-item">
+                        <div class="wait-value">{{ wait_analytics.pending_requests }}</div>
+                        <div class="wait-label">Pending</div>
+                    </div>
+                    <div class="wait-item">
+                        <div class="wait-value">{{ wait_analytics.avg_wait_time_pending|default:"0" }}</div>
+                        <div class="wait-label">Avg Min</div>
+                    </div>
+                    <div class="wait-item">
+                        <div class="wait-value {% if wait_analytics.max_wait_time_pending > 60 %}red{% endif %}">{{ wait_analytics.max_wait_time_pending|default:"0" }}</div>
+                        <div class="wait-label">Max Min</div>
+                    </div>
+                    <div class="wait-item">
+                        <div class="wait-value green">{{ wait_analytics.completed_requests }}</div>
+                        <div class="wait-label">Completed</div>
+                    </div>
+                    <div class="wait-item">
+                        <div class="wait-value">{{ wait_analytics.emergency_pending }}</div>
+                        <div class="wait-label">Emergency</div>
+                    </div>
+                    <div class="wait-item">
+                        <div class="wait-value">{{ wait_analytics.avg_processing_time|default:"0" }}</div>
+                        <div class="wait-label">Avg Process</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Department Wait Times -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">🏢 Department Status</div>
+                </div>
+                <div class="dept-grid">
+                    {% for dept_name, data in department_wait_times.items %}
+                    <div class="dept-card {% if data.utilization > 100 %}overloaded{% endif %}">
+                        <div class="dept-name">{{ dept_name }}</div>
+                        <div class="dept-wait {% if data.avg_wait_minutes > 60 %}warning{% endif %}">{{ data.avg_wait_minutes }}m</div>
+                        <div class="dept-meta">{{ data.pending_count }} pending • {{ data.utilization }}% load</div>
+                    </div>
                     {% endfor %}
-                </table>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Right Column - Analytics -->
-    <div>
-        <!-- Wait Time Analytics -->
-        <div class="panel">
-            <h2>⏱️ Wait Times</h2>
-            <div class="wait-grid">
-                <div class="wait-item">
-                    <div class="wait-value">{{ wait_analytics.pending_requests }}</div>
-                    <div class="wait-label">Pending</div>
-                </div>
-                <div class="wait-item">
-                    <div class="wait-value">{{ wait_analytics.avg_wait_time_pending|default:"0" }}</div>
-                    <div class="wait-label">Avg Min</div>
-                </div>
-                <div class="wait-item">
-                    <div class="wait-value {% if wait_analytics.max_wait_time_pending > 60 %}red{% endif %}">{{ wait_analytics.max_wait_time_pending|default:"0" }}</div>
-                    <div class="wait-label">Max Min</div>
-                </div>
-                <div class="wait-item">
-                    <div class="wait-value green">{{ wait_analytics.completed_requests }}</div>
-                    <div class="wait-label">Completed</div>
-                </div>
-                <div class="wait-item">
-                    <div class="wait-value">{{ wait_analytics.emergency_pending }}</div>
-                    <div class="wait-label">Emergency</div>
-                </div>
-                <div class="wait-item">
-                    <div class="wait-value">{{ wait_analytics.avg_processing_time|default:"0" }}</div>
-                    <div class="wait-label">Avg Process</div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Department Wait Times -->
-        <div class="panel">
-            <h2>🏢 Dept. Wait Times</h2>
-            <div class="dept-grid">
-                {% for dept_name, data in department_wait_times.items %}
-                <div class="dept-card {% if data.utilization > 100 %}overloaded{% endif %}">
-                    <div class="dept-name">{{ dept_name }}</div>
-                    <div class="dept-wait {% if data.avg_wait_minutes > 60 %}warning{% endif %}">{{ data.avg_wait_minutes }}m</div>
-                    <div class="dept-meta">{{ data.pending_count }} pending • {{ data.utilization }}% load</div>
+            
+            <!-- Chart -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">📊 Department Load</div>
                 </div>
-                {% endfor %}
-            </div>
-        </div>
-        
-        <!-- Small Chart -->
-        <div class="panel">
-            <h2>📊 Department Load</h2>
-            <div class="chart-container">
-                <canvas id="deptChart"></canvas>
+                <div class="chart-container">
+                    <canvas id="deptChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -414,6 +631,12 @@
     const deptNames = JSON.parse(document.getElementById('dept-names').textContent);
     const deptLoads = JSON.parse(document.getElementById('dept-loads').textContent);
     const ctx = document.getElementById('deptChart').getContext('2d');
+    
+    // Create gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+    gradient.addColorStop(0, 'rgba(102, 126, 234, 0.8)');
+    gradient.addColorStop(1, 'rgba(118, 75, 162, 0.2)');
+    
     new Chart(ctx, {
         type: 'bar',
         data: {
@@ -421,18 +644,34 @@
             datasets: [{
                 label: 'Active Cases',
                 data: deptLoads,
-                backgroundColor: 'rgba(67, 97, 238, 0.7)',
-                borderColor: 'rgba(67, 97, 238, 1)',
-                borderWidth: 1
+                backgroundColor: gradient,
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false,
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(102, 126, 234, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8,
+                }
+            },
             scales: {
-                y: { beginAtZero: true, ticks: { font: { size: 10 } } },
-                x: { ticks: { font: { size: 9 } } }
+                y: { 
+                    beginAtZero: true, 
+                    ticks: { font: { size: 10 } },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                x: { 
+                    ticks: { font: { size: 9 } },
+                    grid: { display: false }
+                }
             }
         }
     });
