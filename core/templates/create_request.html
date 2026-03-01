@@ -2,19 +2,22 @@
 <html>
 <head>
     <title>Create Request - Hospital Workflow</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-            --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            --card-bg: rgba(30, 41, 59, 0.9);
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0a0f1c;
+            --dark-secondary: #1e293b;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.1);
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         * {
@@ -25,7 +28,7 @@
 
         body {
             font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-            background: var(--bg-gradient);
+            background: #0a0f1c;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -34,7 +37,6 @@
             position: relative;
         }
 
-        /* Animated background */
         body::before {
             content: '';
             position: fixed;
@@ -43,54 +45,54 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
             pointer-events: none;
             z-index: 0;
+            animation: meshMove 20s ease-in-out infinite;
+        }
+
+        @keyframes meshMove {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(2deg); }
         }
 
         .container {
-            max-width: 600px;
+            max-width: 580px;
             width: 100%;
-            background: var(--card-bg);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
             backdrop-filter: blur(20px);
-            padding: 48px;
-            border-radius: 32px;
-            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-color);
+            padding: 44px;
+            border-radius: 28px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
             position: relative;
             z-index: 1;
             animation: slideUp 0.5s ease;
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 36px;
         }
 
         .header-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--primary-gradient);
-            border-radius: 24px;
+            width: 76px;
+            height: 76px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            margin: 0 auto 24px;
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            font-size: 34px;
+            margin: 0 auto 22px;
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
             animation: float 3s ease-in-out infinite;
         }
 
@@ -102,27 +104,27 @@
         h2 {
             text-align: center;
             color: var(--text-primary);
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
         }
 
         .subtitle {
             text-align: center;
-            color: var(--text-secondary);
-            font-size: 15px;
+            color: var(--text-muted);
+            font-size: 14px;
             font-weight: 500;
         }
 
         .form-group {
-            margin-bottom: 28px;
+            margin-bottom: 26px;
         }
 
         label {
             font-weight: 600;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: var(--text-primary);
             font-size: 14px;
             display: flex;
@@ -131,9 +133,7 @@
         }
 
         label i {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary-light);
         }
 
         .required {
@@ -143,87 +143,104 @@
 
         input[type="text"] {
             width: 100%;
-            padding: 16px 20px;
-            border-radius: 14px;
-            border: 2px solid var(--border-color);
+            padding: 15px 18px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 15px;
             font-family: 'Plus Jakarta Sans', Arial, sans-serif;
             transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: #818cf8;
-            background: rgba(99, 102, 241, 0.1);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-light);
+            background: rgba(99, 102, 241, 0.08);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
         }
 
         input[type="text"]::placeholder {
-            color: var(--text-secondary);
+            color: var(--text-muted);
         }
 
         select {
             width: 100%;
-            padding: 16px 20px;
-            border-radius: 14px;
-            border: 2px solid var(--border-color);
+            padding: 15px 18px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 15px;
             font-family: 'Plus Jakarta Sans', Arial, sans-serif;
             transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
             cursor: pointer;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 20px;
+            background-position: right 14px center;
+            background-size: 18px;
         }
 
         select:focus {
             outline: none;
-            border-color: #818cf8;
-            background-color: rgba(99, 102, 241, 0.1);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-light);
+            background-color: rgba(99, 102, 241, 0.08);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
         }
 
         select option {
-            background: #1e293b;
-            color: #f8fafc;
+            background: var(--dark-secondary);
+            color: var(--text-primary);
             padding: 12px;
         }
 
         optgroup {
             font-weight: 600;
-            color: #818cf8;
+            color: var(--primary-light);
         }
 
         .btn {
             width: 100%;
-            padding: 18px;
-            background: var(--primary-gradient);
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 32px;
+            margin-top: 28px;
             transition: all 0.3s;
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 18px 45px rgba(99, 102, 241, 0.5);
         }
 
         .btn:active {
@@ -234,43 +251,43 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 24px;
+            margin-top: 22px;
             text-decoration: none;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             font-weight: 600;
             transition: color 0.2s;
             gap: 8px;
         }
 
         .back-link:hover {
-            color: #818cf8;
+            color: var(--primary-light);
         }
 
         .info-box {
-            background: rgba(16, 185, 129, 0.15);
-            border-left: 4px solid #10b981;
-            padding: 18px 22px;
-            margin: 28px 0;
-            border-radius: 12px;
-            font-size: 14px;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 16px 20px;
+            margin: 24px 0;
+            border-radius: 10px;
+            font-size: 13px;
             color: #6ee7b7;
         }
 
         .info-box strong {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
+            gap: 8px;
+            margin-bottom: 4px;
             color: #a7f3d0;
         }
 
         .emergency-note {
-            background: rgba(239, 68, 68, 0.15);
-            border-left: 4px solid #ef4444;
-            padding: 18px 22px;
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 16px 20px;
             margin: 20px 0;
-            border-radius: 12px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 13px;
             color: #fca5a5;
             animation: fadeIn 0.3s ease;
         }
@@ -278,8 +295,8 @@
         .emergency-note strong {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
+            gap: 8px;
+            margin-bottom: 4px;
             color: #fecaca;
         }
 
@@ -291,8 +308,8 @@
         .category-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 5px;
+            gap: 10px;
+            margin-top: 4px;
         }
 
         .category-card {
@@ -311,33 +328,33 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
+            padding: 18px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--border);
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
             margin: 0;
         }
 
         .category-card label:hover {
-            border-color: #818cf8;
-            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary-light);
+            background: rgba(99, 102, 241, 0.08);
         }
 
         .category-card input[type="radio"]:checked + label {
-            border-color: #818cf8;
-            background: rgba(99, 102, 241, 0.2);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-light);
+            background: rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
         .category-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 26px;
+            margin-bottom: 6px;
         }
 
         .category-text {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -345,8 +362,8 @@
         .priority-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 5px;
+            gap: 10px;
+            margin-top: 4px;
         }
 
         .priority-card {
@@ -365,57 +382,55 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 18px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
+            padding: 16px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--border);
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
             margin: 0;
         }
 
         .priority-card label:hover {
-            border-color: #818cf8;
-            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary-light);
+            background: rgba(99, 102, 241, 0.08);
         }
 
         .priority-card input[type="radio"]:checked + label {
-            border-color: #818cf8;
-            background: rgba(99, 102, 241, 0.2);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-light);
+            background: rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
         .priority-card input[type="radio"]:checked + label.emergency-label {
-            border-color: #ef4444;
-            background: rgba(239, 68, 68, 0.2);
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.15);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
         }
 
         .priority-icon {
-            font-size: 24px;
-            margin-bottom: 6px;
+            font-size: 22px;
+            margin-bottom: 5px;
         }
 
         .priority-text {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
         }
 
-        /* Form row for better layout */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 18px;
         }
 
         @media (max-width: 600px) {
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
             .container {
-                padding: 32px 24px;
+                padding: 28px 22px;
             }
         }
     </style>
@@ -426,7 +441,7 @@
     <div class="header">
         <div class="header-icon">🏥</div>
         <h2>New Patient Request</h2>
-        <p class="subtitle">Fill in the details to create a workflow request</p>
+        <p class="subtitle">Create a new workflow request</p>
     </div>
 
     <form method="POST">
@@ -456,17 +471,17 @@
                 <optgroup label="🏥 Surgery">
                     <option value="Surgery">Surgery</option>
                 </optgroup>
-                <optgroup label="🩺 General Medicine">
+                <optgroup label="🩺 General">
                     <option value="General Checkup">General Checkup</option>
                 </optgroup>
                 <optgroup label="🦷 Dental">
                     <option value="Dental">Dental Care</option>
                 </optgroup>
-                <optgroup label="👁️ Ophthalmology">
+                <optgroup label="👁️ Eye">
                     <option value="Eye">Eye Care</option>
                     <option value="Optical">Optical</option>
                 </optgroup>
-                <optgroup label="💪 Physiotherapy">
+                <optgroup label="💪 Physio">
                     <option value="Physiotherapy">Physiotherapy</option>
                 </optgroup>
                 <optgroup label="💊 Pharmacy">
@@ -533,13 +548,12 @@
         
         <div class="info-box">
             <strong><i class="fas fa-info-circle"></i> Queue System</strong>
-            Requests are automatically queued based on priority and arrival time. 
-            Emergency cases are given priority in the queue with shorter SLA deadlines.
+            Requests are automatically queued based on priority and arrival time. Emergency cases get priority with shorter SLA deadlines.
         </div>
         
         <div class="emergency-note" id="emergencyNote" style="display:none;">
             <strong><i class="fas fa-exclamation-triangle"></i> Emergency Priority</strong>
-            Emergency requests will have a shorter SLA deadline (4 hours) and will be prioritized in the queue over all other requests.
+            Emergency requests will have a shorter SLA deadline (4 hours) and will be prioritized in the queue.
         </div>
 
         <button type="submit">

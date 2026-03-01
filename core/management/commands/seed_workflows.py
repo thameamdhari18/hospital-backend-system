@@ -1,6 +1,3 @@
-git """
-Management command to seed workflow definitions and category modifiers
-"""
 from django.core.management.base import BaseCommand
 from core.models import WorkflowDefinition, CategoryWorkflowModifier
 from core.models import Department
