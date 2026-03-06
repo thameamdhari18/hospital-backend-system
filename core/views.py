@@ -267,17 +267,16 @@ def update_status(request, request_id):
                 next_dept = Department.objects.filter(name__iexact="Billing").first()
 
                 if next_dept:
-                    req.assigned_department = next_dept
-                    req.status = "Assigned"
-                    req.assigned_at = timezone.now()
-                    
-                    # Recalculate queue position for new department
-                    pending_count = Request.objects.filter(
+                    # Calculate new queue position for Billing department
+                    billing_pending = Request.objects.filter(
                         assigned_department=next_dept,
                         status__in=['Assigned', 'In Progress']
                     ).exclude(id=req.id).count()
-                    req.queue_position = pending_count + 1
                     
+                    req.assigned_department = next_dept
+                    req.status = "Assigned"
+                    req.queue_position = billing_pending + 1
+                    req.assigned_at = timezone.now()
                     req.save()
 
                     next_dept.current_load += 1
@@ -286,7 +285,7 @@ def update_status(request, request_id):
                     RequestHistory.objects.create(
                         request=req,
                         department=next_dept,
-                        status="Transferred to Billing"
+                        status=f"Transferred to Billing (Queue: #{billing_pending + 1})"
                     )
                     
                     logger.info(f"Request {req.id} transferred to Billing department")
@@ -294,7 +293,7 @@ def update_status(request, request_id):
                     logger.warning(f"Billing department not found for request {req.id}")
 
             # If closed -> reduce department load
-            if new_status == "Closed":
+            elif new_status == "Closed":
                 current_dept = req.assigned_department
                 if current_dept:
                     if current_dept.current_load > 0:
@@ -313,3 +312,4 @@ def update_status(request, request_id):
         messages.error(request, "Error updating status. Please try again.")
 
     return redirect("dashboard")
+
